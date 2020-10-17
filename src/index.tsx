@@ -1,24 +1,48 @@
-import React, { CSSProperties, useRef, useState } from "react";
+import React, { CSSProperties, useEffect, useRef, useState } from "react";
 import { render } from "react-dom";
 import { v4 as uuidv4 } from 'uuid';
 
 type TodoData = {
     id: string,
-    text: string
+    text: string,
+    clickFlag?: boolean,
 }
+
 type TodoCtrl = {
     add?: (data: TodoData) => void,
     del?: (uuid: string) => void,
     list?: TodoData[]
 }
 
+const sampleTasks:TodoData[] = [
+    {   
+        id: uuidv4(),
+        text: 'Take a cut nap'
+    },
+    {   
+        id: uuidv4(),
+        text: 'Bug eggs',
+        clickFlag: true,
+    },
+    {   
+        id:uuidv4(), 
+        text: 'Read a book'
+    },
+]
 
-const Todo = () =>{
+const Todo = () => {
     const style:CSSProperties = {
         margin: '40px auto',
     }
 
     const [list, setList] = useState<TodoData[]>([]);
+
+    useEffect(() => {
+        sampleTasks.map(d => handleAdd(d));
+        return () => {
+            setList([]);
+        }
+    }, [])
 
     const handleAdd = (data: TodoData) => {
         setList(prevArray => [...prevArray, data]);
@@ -84,15 +108,20 @@ const TodoList:React.FC<TodoCtrl> = (props) => {
 
     return (
         <ul className="margin0">
-            { list !== undefined && list.length !== 0  ? list.map( (v, i) => <TodoContainer key={v.id} uuid={v.id} text={v.text} del={handleDel} idx={i} /> ) : null }
+            { list !== undefined && list.length !== 0  ? list.map( (v, i) => <TodoContainer key={v.id} uuid={v.id} text={v.text} del={handleDel} idx={i} defaultChk={v.clickFlag} /> ) : null }
         </ul>
     )
 }
 
-const TodoContainer:React.FC<{text:string, uuid:string, del: (event: React.MouseEvent) => void, idx:number}> = (props) => {
-    const {text, uuid, del, idx} = props;
+const TodoContainer:React.FC<{text:string, uuid:string, del: (event: React.MouseEvent) => void, idx:number, defaultChk:boolean | undefined}> = (props) => {
+    const {text, uuid, del, idx, defaultChk} = props;
     const [clickFlag, setClickFlag] = useState(false);
     
+    useEffect(() => {
+        if(defaultChk !== undefined && defaultChk === true)
+            setClickFlag(!clickFlag);
+    }, [])
+
     const handleClick = () => {
         setClickFlag(!clickFlag);
     }

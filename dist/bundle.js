@@ -118,6 +118,17 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
+var sampleTasks = [{
+  id: Object(uuid__WEBPACK_IMPORTED_MODULE_2__["v4"])(),
+  text: 'Take a cut nap'
+}, {
+  id: Object(uuid__WEBPACK_IMPORTED_MODULE_2__["v4"])(),
+  text: 'Bug eggs',
+  clickFlag: true
+}, {
+  id: Object(uuid__WEBPACK_IMPORTED_MODULE_2__["v4"])(),
+  text: 'Read a book'
+}];
 
 var Todo = function Todo() {
   var style = {
@@ -128,6 +139,15 @@ var Todo = function Todo() {
       _useState2 = _slicedToArray(_useState, 2),
       list = _useState2[0],
       setList = _useState2[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    sampleTasks.map(function (d) {
+      return handleAdd(d);
+    });
+    return function () {
+      setList([]);
+    };
+  }, []);
 
   var handleAdd = function handleAdd(data) {
     setList(function (prevArray) {
@@ -216,7 +236,8 @@ var TodoList = function TodoList(props) {
       uuid: v.id,
       text: v.text,
       del: handleDel,
-      idx: i
+      idx: i,
+      defaultChk: v.clickFlag
     });
   }) : null);
 };
@@ -225,12 +246,17 @@ var TodoContainer = function TodoContainer(props) {
   var text = props.text,
       uuid = props.uuid,
       del = props.del,
-      idx = props.idx;
+      idx = props.idx,
+      defaultChk = props.defaultChk;
 
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
       _useState4 = _slicedToArray(_useState3, 2),
       clickFlag = _useState4[0],
       setClickFlag = _useState4[1];
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    if (defaultChk !== undefined && defaultChk === true) setClickFlag(!clickFlag);
+  }, []);
 
   var handleClick = function handleClick() {
     setClickFlag(!clickFlag);
