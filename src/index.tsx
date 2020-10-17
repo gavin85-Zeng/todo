@@ -1,4 +1,4 @@
-import React, { CSSProperties, FunctionComponent, useRef, useState } from "react";
+import React, { CSSProperties, useRef, useState } from "react";
 import { render } from "react-dom";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -38,15 +38,9 @@ const Todo = () =>{
 
 const TodoInput:React.FC<TodoCtrl> = (props) => {
     const {add} = props;
-    const style:CSSProperties = {
-        display: 'flex',
-        padding: '5px',
-        flexWrap: 'wrap',
-        gap: '5px',
-    }
-
     const inputEl = useRef<HTMLInputElement>(null);
-    const handleClick = () => {
+    
+    const addEl = () => {
         if(inputEl.current !== null && inputEl.current.value !== ''){
             let data:TodoData = {
                 id: uuidv4(),
@@ -54,13 +48,26 @@ const TodoInput:React.FC<TodoCtrl> = (props) => {
             }
             add !== undefined ?  add(data) : console.log('[Error] add function undefined!');
             inputEl.current.value = '';
+        }else{
+            alert('Please key-in tasks...');
         }
+    }
+
+    const handleClick = () => {
+        addEl();
     }    
+    
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if(event.key === 'Enter'){
+            addEl();
+        }
+    }
 
     return (
-        <div style={style}>
-            <input type='text' ref={inputEl} placeholder='tasks' />
-            <button type='button' onClick={handleClick}>Add</button>
+        <div className="header">
+            <h2>To Do List</h2>
+            <input type='text' ref={inputEl} onKeyDown={handleKeyDown} className="todoInput" placeholder='Tasks...' />
+            <input type='button' onClick={handleClick} value="Add" className="addBtn" />
         </div>
     )
 }
@@ -69,34 +76,31 @@ const TodoList:React.FC<TodoCtrl> = (props) => {
     const {del, list, children} = props;
     const handleDel = (event: React.MouseEvent) => {
         const uuid:string | null = event.currentTarget.getAttribute('data-key');
-        const text:string | null = event.currentTarget.textContent;
         if(uuid !== null && del !== undefined){
             del(uuid);
-            console.log(`[DEBUG] Remove task: ${text} uuid: ${uuid}`);
+            console.log(`[DEBUG] Remove uuid: ${uuid}`);
         }
     }
 
     return (
-        <>
-            { list !== undefined && list.length !== 0  ? list.map( (v) => <TodoContainer key={v.id} uuid={v.id} text={v.text} del={handleDel} /> ) : null }
-        </>
+        <ul className="margin0">
+            { list !== undefined && list.length !== 0  ? list.map( (v, i) => <TodoContainer key={v.id} uuid={v.id} text={v.text} del={handleDel} idx={i} /> ) : null }
+        </ul>
     )
 }
 
-const TodoContainer:React.FC<{text:string, uuid:string, del: (event: React.MouseEvent) => void}> = (props) => {
-    const {text, uuid, del} = props;
-    const style:CSSProperties = {
-        display: 'flex',
-        flexWrap: 'wrap',
-        gap: '5rem',
+const TodoContainer:React.FC<{text:string, uuid:string, del: (event: React.MouseEvent) => void, idx:number}> = (props) => {
+    const {text, uuid, del, idx} = props;
+    const [clickFlag, setClickFlag] = useState(false);
+    
+    const handleClick = () => {
+        setClickFlag(!clickFlag);
     }
-
     return(
-        <div style={style} >
-            <input type="checkbox" id={uuid}/>
-            <label htmlFor={uuid}>{text}</label>
-            <div data-key={uuid} onClick={del}>X</div>
-        </div>
+        <li className={`${idx % 2 === 0 ? 'single' : 'double'} ${clickFlag === true ? 'checked' : ''}`} onClick={handleClick}> 
+            <p className="liParagraph">{text}</p>
+        <span data-key={uuid} onClick={del} className="del">{'\u00D7'}</span>
+        </li>
     )
 }
 

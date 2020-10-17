@@ -1,5 +1,95 @@
+*{
+    box-sizing: border-box;
+}
 body {
     margin: 0 auto;
-    height: 500px;
-    width: 30%;
+    width: 75%;
+}
+.header{
+    background-color: rgb(244, 67, 54);
+    padding: 30px 40px;
+    color: white;
+    text-align: center;
+}
+.todoInput{
+    outline: none;
+    padding: 10px;
+    width: 75%;
+    border: none;
+    border-radius: 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+.addBtn{
+    padding: 10px;
+    width: 25%;
+    background: #d9d9d9;
+    color: #555;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 0;
+    outline: none;
+    border: 0;
+}
+.addBtn:hover{
+    background-color: #afafaf;
+}
+.margin0{
+    margin: 0;
+    padding: 0;
+}
+.del{
+    margin: auto;
+    width: 25px;
+    height: 40px;
+    position: absolute;
+    right: 1%;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+    font-size: 35px;
+}
+.del:hover{
+    background-color: rgba(244, 67, 54, .8);
+}
+.liParagraph{
+    max-width: 90%;
+}
+ul li{
+    cursor: pointer;
+    position: relative;
+    padding: 12px 8px 12px 40px;
+    list-style-type: none;
+    font-size: 18px;
+    transition: 0.2s;
+    word-break: break-word;
+}
+ul li.single{
+    background: #f9f9f9;
+}
+ul li.double{
+    background-color: #eee;
+}
+ul li:hover{
+    background-color: #ddd;
+}
+ul li.checked{
+    background:rgb(236, 156, 156);
+    color: #fff;
+    text-decoration: line-through;
+}
+ul li.checked::before{
+    content: '';
+    margin: auto 0;
+    position: absolute;
+    border-color: #fff;
+    border-style: solid;
+    border-width: 0 2px 2px 0;
+    top: -5px;
+    left: 16px;
+    right: 0;
+    bottom: 0;
+    transform: rotate(45deg);
+    height: 15px;
+    width: 7px;
 }

@@ -153,15 +153,9 @@ var Todo = function Todo() {
 
 var TodoInput = function TodoInput(props) {
   var add = props.add;
-  var style = {
-    display: 'flex',
-    padding: '10px',
-    flexWrap: 'wrap',
-    gap: '5px'
-  };
   var inputEl = Object(react__WEBPACK_IMPORTED_MODULE_0__["useRef"])(null);
 
-  var handleClick = function handleClick() {
+  var addEl = function addEl() {
     if (inputEl.current !== null && inputEl.current.value !== '') {
       var _data = {
         id: Object(uuid__WEBPACK_IMPORTED_MODULE_2__["v4"])(),
@@ -169,19 +163,35 @@ var TodoInput = function TodoInput(props) {
       };
       add !== undefined ? add(_data) : console.log('[Error] add function undefined!');
       inputEl.current.value = '';
+    } else {
+      alert('Please key-in tasks...');
+    }
+  };
+
+  var handleClick = function handleClick() {
+    addEl();
+  };
+
+  var handleKeyDown = function handleKeyDown(event) {
+    if (event.key === 'Enter') {
+      addEl();
     }
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    style: style
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    className: "header"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h2", null, "To Do List"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "text",
     ref: inputEl,
-    placeholder: "tasks"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onKeyDown: handleKeyDown,
+    className: "todoInput",
+    placeholder: "Tasks..."
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
     type: "button",
-    onClick: handleClick
-  }, "Add"));
+    onClick: handleClick,
+    value: "Add",
+    className: "addBtn"
+  }));
 };
 
 var TodoList = function TodoList(props) {
@@ -191,20 +201,22 @@ var TodoList = function TodoList(props) {
 
   var handleDel = function handleDel(event) {
     var uuid = event.currentTarget.getAttribute('data-key');
-    var text = event.currentTarget.textContent;
 
     if (uuid !== null && del !== undefined) {
       del(uuid);
-      console.log("[DEBUG] Remove task: ".concat(text, " uuid: ").concat(uuid));
+      console.log("[DEBUG] Remove uuid: ".concat(uuid));
     }
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, list !== undefined && list.length !== 0 ? list.map(function (v) {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
+    className: "margin0"
+  }, list !== undefined && list.length !== 0 ? list.map(function (v, i) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(TodoContainer, {
       key: v.id,
       uuid: v.id,
       text: v.text,
-      del: handleDel
+      del: handleDel,
+      idx: i
     });
   }) : null);
 };
@@ -212,23 +224,28 @@ var TodoList = function TodoList(props) {
 var TodoContainer = function TodoContainer(props) {
   var text = props.text,
       uuid = props.uuid,
-      del = props.del;
-  var style = {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '5rem'
+      del = props.del,
+      idx = props.idx;
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState4 = _slicedToArray(_useState3, 2),
+      clickFlag = _useState4[0],
+      setClickFlag = _useState4[1];
+
+  var handleClick = function handleClick() {
+    setClickFlag(!clickFlag);
   };
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    style: style
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-    type: "checkbox",
-    id: uuid
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
-    htmlFor: uuid
-  }, text), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+    className: "".concat(idx % 2 === 0 ? 'single' : 'double', " ").concat(clickFlag === true ? 'checked' : ''),
+    onClick: handleClick
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
+    className: "liParagraph"
+  }, text), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     "data-key": uuid,
-    onClick: del
-  }, "X"));
+    onClick: del,
+    className: "del"
+  }, "\xD7"));
 };
 
 Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["render"])( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Todo, null), document.querySelector('#root'));
