@@ -128,7 +128,7 @@ const TodoContainer:React.FC<{text:string, uuid:string, del: (event: React.Mouse
     return(
         <li className={`${idx % 2 === 0 ? 'single' : 'double'} ${clickFlag === true ? 'checked' : ''}`} onClick={handleClick}> 
             <p className="liParagraph">{text}</p>
-        <span data-key={uuid} onClick={del} className="del">{'\u00D7'}</span>
+            <span data-key={uuid} onClick={del} className="del">{'\u00D7'}</span>
         </li>
     )
 }
