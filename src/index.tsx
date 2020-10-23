@@ -98,25 +98,18 @@ const TodoInput:React.FC<TodoCtrl> = (props) => {
 
 const TodoList:React.FC<TodoCtrl> = (props) => {
     const {del, list, children} = props;
-    const handleDel = (event: React.MouseEvent) => {
-        const uuid:string | null = event.currentTarget.getAttribute('data-key');
-        if(uuid !== null && del !== undefined){
-            del(uuid);
-            console.log(`[DEBUG] Remove uuid: ${uuid}`);
-        }
-    }
-
     return (
         <ul className="margin0">
-            { list !== undefined && list.length !== 0  ? list.map( (v, i) => <TodoContainer key={v.id} uuid={v.id} text={v.text} del={handleDel} idx={i} defaultChk={v.clickFlag} /> ) : null }
+            { list !== undefined && list.length !== 0  ? list.map( (v, i) => <TodoContainer key={v.id} uuid={v.id} text={v.text} del={del} idx={i} defaultChk={v.clickFlag}/> ) : null }
         </ul>
     )
 }
 
-const TodoContainer:React.FC<{text:string, uuid:string, del: (event: React.MouseEvent) => void, idx:number, defaultChk:boolean | undefined}> = (props) => {
+const TodoContainer:React.FC<{text:string, uuid:string, del:((uuid: string) => void) | undefined, idx:number, defaultChk:boolean | undefined}> = (props) => {
     const {text, uuid, del, idx, defaultChk} = props;
     const [clickFlag, setClickFlag] = useState(false);
-    
+    const [fadeOut, setFadeOut] = useState(false);
+
     useEffect(() => {
         if(defaultChk !== undefined && defaultChk === true)
             setClickFlag(!clickFlag);
@@ -125,10 +118,21 @@ const TodoContainer:React.FC<{text:string, uuid:string, del: (event: React.Mouse
     const handleClick = () => {
         setClickFlag(!clickFlag);
     }
+    
+    const handleFadeOut = (event: React.MouseEvent) => {
+        const uuid:string | null = event.currentTarget.getAttribute('data-key');
+        setFadeOut(!fadeOut);
+        setTimeout(() => {
+            if(uuid !== null && del !== undefined){
+                del(uuid);
+                console.log(`[DEBUG] Remove uuid: ${uuid}`);
+            }
+        }, 300);
+    }
     return(
-        <li className={`${idx % 2 === 0 ? 'single' : 'double'} ${clickFlag === true ? 'checked' : ''}`} onClick={handleClick}> 
-            <p className="liParagraph">{text}</p>
-            <span data-key={uuid} onClick={del} className="del">{'\u00D7'}</span>
+        <li className={`${idx % 2 === 0 ? 'single' : 'double'} ${clickFlag === true ? 'checked' : ''} ${fadeOut === true ? 'fadeOut' : ''}`}> 
+            <p className="liParagraph" onClick={handleClick}>{text}</p>
+            <span data-key={uuid} onClick={handleFadeOut} className="del">{'\u00D7'}</span>
         </li>
     )
 }
