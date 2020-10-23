@@ -58,7 +58,7 @@ body {
 ul li{
     cursor: pointer;
     position: relative;
-    padding: 12px 8px 12px 40px;
+    padding: 0 8px 0 40px;
     list-style-type: none;
     font-size: 18px;
     transition: 0.2s;
@@ -92,4 +92,19 @@ ul li.checked::before{
     transform: rotate(45deg);
     height: 15px;
     width: 7px;
+}
+
+.fadeOut{
+    opacity: 0;
+    transition: transform 1s, opacity 0.5s ease-in-out;
+    transform: translateX(-100%);
+}
+
+/* override p tag for click area */
+p{ 
+    line-height: 2rem;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
