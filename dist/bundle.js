@@ -218,16 +218,6 @@ var TodoList = function TodoList(props) {
   var del = props.del,
       list = props.list,
       children = props.children;
-
-  var handleDel = function handleDel(event) {
-    var uuid = event.currentTarget.getAttribute('data-key');
-
-    if (uuid !== null && del !== undefined) {
-      del(uuid);
-      console.log("[DEBUG] Remove uuid: ".concat(uuid));
-    }
-  };
-
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
     className: "margin0"
   }, list !== undefined && list.length !== 0 ? list.map(function (v, i) {
@@ -235,7 +225,7 @@ var TodoList = function TodoList(props) {
       key: v.id,
       uuid: v.id,
       text: v.text,
-      del: handleDel,
+      del: del,
       idx: i,
       defaultChk: v.clickFlag
     });
@@ -254,6 +244,11 @@ var TodoContainer = function TodoContainer(props) {
       clickFlag = _useState4[0],
       setClickFlag = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(false),
+      _useState6 = _slicedToArray(_useState5, 2),
+      fadeOut = _useState6[0],
+      setFadeOut = _useState6[1];
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
     if (defaultChk !== undefined && defaultChk === true) setClickFlag(!clickFlag);
   }, []);
@@ -262,14 +257,25 @@ var TodoContainer = function TodoContainer(props) {
     setClickFlag(!clickFlag);
   };
 
+  var handleFadeOut = function handleFadeOut(event) {
+    var uuid = event.currentTarget.getAttribute('data-key');
+    setFadeOut(!fadeOut);
+    setTimeout(function () {
+      if (uuid !== null && del !== undefined) {
+        del(uuid);
+        console.log("[DEBUG] Remove uuid: ".concat(uuid));
+      }
+    }, 300);
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-    className: "".concat(idx % 2 === 0 ? 'single' : 'double', " ").concat(clickFlag === true ? 'checked' : ''),
-    onClick: handleClick
+    className: "".concat(idx % 2 === 0 ? 'single' : 'double', " ").concat(clickFlag === true ? 'checked' : '', " ").concat(fadeOut === true ? 'fadeOut' : '')
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
-    className: "liParagraph"
+    className: "liParagraph",
+    onClick: handleClick
   }, text), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     "data-key": uuid,
-    onClick: del,
+    onClick: handleFadeOut,
     className: "del"
   }, "\xD7"));
 };
