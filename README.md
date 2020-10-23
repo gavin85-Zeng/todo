@@ -14,6 +14,11 @@ Dependency :
 import { v4 as uuidv4 } from 'uuid';
 ```
 
-2020/10/22 [Add online demo](https://gavin85-zeng.github.io/todo/)
+## History
+
+- 2020/10/23 Add delete tasks fade out animation
+- 2020/10/22 [Add online demo](https://gavin85-zeng.github.io/todo/)
+
+## Other
 
 __Reference URL__: <https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_todo>
