@@ -259,22 +259,29 @@ var TodoContainer = function TodoContainer(props) {
 
   var handleFadeOut = function handleFadeOut(event) {
     var uuid = event.currentTarget.getAttribute('data-key');
-    setFadeOut(!fadeOut);
-    setTimeout(function () {
-      if (uuid !== null && del !== undefined) {
-        del(uuid);
-        console.log("[DEBUG] Remove uuid: ".concat(uuid));
-      }
-    }, 300);
+    setFadeOut(!fadeOut); // setTimeout(() => {
+    //     if(uuid !== null && del !== undefined){
+    //         del(uuid);
+    //         console.log(`[DEBUG] Remove uuid: ${uuid}`);
+    //     }
+    // }, 300);
   };
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
-    className: "".concat(idx % 2 === 0 ? 'single' : 'double', " ").concat(clickFlag === true ? 'checked' : '', " ").concat(fadeOut === true ? 'fadeOut' : '')
+    "data-key": uuid,
+    className: "".concat(idx % 2 === 0 ? 'single' : 'double', " ").concat(clickFlag === true ? 'checked' : '', " ").concat(fadeOut === true ? 'fadeOut' : ''),
+    onTransitionEnd: function onTransitionEnd(e) {
+      var uuid = e.currentTarget.getAttribute('data-key');
+
+      if (fadeOut && uuid !== null && del !== undefined) {
+        del(uuid);
+        console.log("[DEBUG] Remove uuid: ".concat(uuid));
+      }
+    }
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", {
     className: "liParagraph",
     onClick: handleClick
   }, text), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    "data-key": uuid,
     onClick: handleFadeOut,
     className: "del"
   }, "\xD7"));
