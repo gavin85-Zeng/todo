@@ -119,20 +119,20 @@ const TodoContainer:React.FC<{text:string, uuid:string, del:((uuid: string) => v
         setClickFlag(!clickFlag);
     }
     
-    const handleFadeOut = (event: React.MouseEvent) => {
-        const uuid:string | null = event.currentTarget.getAttribute('data-key');
+    const handleFadeOut = () => {
         setFadeOut(!fadeOut);
-        setTimeout(() => {
-            if(uuid !== null && del !== undefined){
+    }
+    return(
+        <li data-key={uuid} className={`${idx % 2 === 0 ? 'single' : 'double'} ${clickFlag === true ? 'checked' : ''} ${fadeOut === true ? 'fadeOut' : ''}`}
+        onTransitionEnd={(e) => {
+            const uuid:string | null = e.currentTarget.getAttribute('data-key');
+            if(fadeOut && (uuid !== null && del !== undefined)){
                 del(uuid);
                 console.log(`[DEBUG] Remove uuid: ${uuid}`);
             }
-        }, 300);
-    }
-    return(
-        <li className={`${idx % 2 === 0 ? 'single' : 'double'} ${clickFlag === true ? 'checked' : ''} ${fadeOut === true ? 'fadeOut' : ''}`}> 
+        }}> 
             <p className="liParagraph" onClick={handleClick}>{text}</p>
-            <span data-key={uuid} onClick={handleFadeOut} className="del">{'\u00D7'}</span>
+            <span onClick={handleFadeOut} className="del">{'\u00D7'}</span>
         </li>
     )
 }
